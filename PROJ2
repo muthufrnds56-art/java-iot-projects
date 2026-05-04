@@ -1,0 +1,57 @@
+class Subject {
+    String name, teacher, room;
+
+    Subject(String name, String teacher, String room) {
+        this.name = name;
+        this.teacher = teacher;
+        this.room = room;
+    }
+}
+
+public class Main {
+    static Subject[] subjects = {
+        new Subject("Math", "T1", "R1"),
+        new Subject("Physics", "T2", "R1"),
+        new Subject("Chemistry", "T1", "R2")
+    };
+
+    static String[] slots = {"S1", "S2", "S3"};
+    static Subject[] timetable = new Subject[slots.length];
+
+    static boolean isSafe(Subject sub, int slot) {
+        for (int i = 0; i < slot; i++) {
+            if (timetable[i] != null) {
+                if (timetable[i].teacher.equals(sub.teacher)) return false;
+                if (timetable[i].room.equals(sub.room)) return false;
+            }
+        }
+        return true;
+    }
+
+    static void backtrack(int index) {
+        if (index == subjects.length) {
+            display();
+            return;
+        }
+
+        for (int i = 0; i < slots.length; i++) {
+            if (timetable[i] == null && isSafe(subjects[index], i)) {
+                timetable[i] = subjects[index];
+                backtrack(index + 1);
+                timetable[i] = null;
+            }
+        }
+    }
+
+    static void display() {
+        for (int i = 0; i < slots.length; i++) {
+            if (timetable[i] != null)
+                System.out.println(slots[i] + " -> " + timetable[i].name + " " + timetable[i].teacher + " " + timetable[i].room);
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        backtrack(0);
+    }
+}
